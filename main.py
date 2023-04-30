@@ -294,3 +294,6 @@ The PCR change is given in 15 minutes time frame with lastest on TOP
     bot.reply_to(message, reply)
 
 bot.polling()
+
+
+# Ends here
