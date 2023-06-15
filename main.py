@@ -6,6 +6,7 @@ import threading
 import time
 import schedule
 import json
+from datetime import datetime
 
 
 load_dotenv()
@@ -14,7 +15,7 @@ API_KEY = os.environ['API_KEY']
 bot = telebot.TeleBot(API_KEY)
 
 def currentTime():
-    current_time = time.strftime("%I:%M:%S %p", time.localtime())
+    current_time = time.strftime("%I:%M %p", time.localtime())
     return current_time
 
 
@@ -72,21 +73,30 @@ def logPCR():
             jsondata.update(x)
         with open ("fnf.json", "w") as f:
             json.dump(jsondata, f, indent=4)
-    tf1 = threading.Thread(target=nfPCR, daemon=True)
-    tf2 = threading.Thread(target=bnfPCR, daemon=True)
-    tf3 = threading.Thread(target=fnfPCR, daemon=True)
-    tf1.start()
-    tf2.start()
-    tf3.start()
+    tnf = threading.Thread(target=nfPCR, daemon=True)
+    tbnf = threading.Thread(target=bnfPCR, daemon=True)
+    tfnf = threading.Thread(target=fnfPCR, daemon=True)
+    tnf.start()
+    tbnf.start()
+    tfnf.start()
 
-# schedule.every(5).seconds.do(logPCR)
+
+# For Debugging Only
+# while datetime.now().minute not in {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60}:
+while datetime.now().minute not in {0, 15, 30, 45}:
+    time.sleep(1)
+logPCR()
+
+
+# For Debugging Only
+# schedule.every(3).minutes.do(logPCR)
 schedule.every(15).minutes.do(logPCR)
 def log15():
     while True:
         schedule.run_pending()
         time.sleep(1)
-t1 = threading.Thread(target=log15, daemon=True)
-t1.start()
+tlog = threading.Thread(target=log15, daemon=True)
+tlog.start()
 
 
         
